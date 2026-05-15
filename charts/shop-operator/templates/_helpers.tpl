@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "shophub.name" -}}
+{{- define "shop-operator.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "shophub.fullname" -}}
+{{- define "shop-operator.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,16 +24,16 @@ Create a default fully qualified app name.
 {{/*
 Chart name and version as used by the chart label.
 */}}
-{{- define "shophub.chart" -}}
+{{- define "shop-operator.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels applied to every resource rendered by this chart.
 */}}
-{{- define "shophub.labels" -}}
-helm.sh/chart: {{ include "shophub.chart" . }}
-{{ include "shophub.selectorLabels" . }}
+{{- define "shop-operator.labels" -}}
+helm.sh/chart: {{ include "shop-operator.chart" . }}
+{{ include "shop-operator.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,7 +45,7 @@ app.kubernetes.io/part-of: shophub-platform
 Selector labels - the subset of labels used by Deployment selectors and
 matching Pod template labels. Must remain stable across upgrades.
 */}}
-{{- define "shophub.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "shophub.name" . }}
+{{- define "shop-operator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "shop-operator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
