@@ -1,0 +1,75 @@
+name: Chart publish
+
+on:
+  push:
+    branches: [develop, master]
+    tags: ["v*"]
+
+jobs:
+  publish:
+    name: Package and publish charts to GHCR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.0
+
+      - name: Log in to GHCR via helm registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | helm registry login ghcr.io \
+            --username "${{ github.actor }}" \
+            --password-stdin
+
+      - name: Determine chart version
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            # Tag of the form v1.2.3 -> use 1.2.3 as the chart version
+            VERSION="${GITHUB_REF#refs/tags/v}"
+          else
+            # Branch push: prefix with 0.0.0- so semver sorts these below
+            # any tagged release, and embed the branch name and short sha.
+            BRANCH="${GITHUB_REF#refs/heads/}"
+            SHORT_SHA="${GITHUB_SHA:0:7}"
+            VERSION="0.0.0-${BRANCH}.${SHORT_SHA}"
+          fi
+          echo "Using chart version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Compute lowercase owner for OCI path
+        id: owner
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          echo "lower=${OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Package every chart with the resolved version
+        run: |
+          set -e
+          mkdir -p /tmp/packaged
+          for chart in charts/*/; do
+            echo "::group::helm package $chart"
+            helm package "$chart" \
+              --version "${{ steps.version.outputs.version }}" \
+              --app-version "${{ steps.version.outputs.version }}" \
+              --destination /tmp/packaged
+            echo "::endgroup::"
+          done
+          ls -la /tmp/packaged
+
+      - name: Push every packaged chart to GHCR
+        run: |
+          set -e
+          for pkg in /tmp/packaged/*.tgz; do
+            echo "::group::helm push $pkg"
+            helm push "$pkg" "oci://ghcr.io/${{ steps.owner.outputs.lower }}/charts"
+            echo "::endgroup::"
+          done
