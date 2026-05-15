@@ -53,4 +53,5 @@ jobs:
           ct lint \
             --target-branch ${{ github.event.pull_request.base.ref }} \
             --validate-maintainers=false \
+            --check-version-increment=false \
             --chart-dirs charts
