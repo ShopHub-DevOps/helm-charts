@@ -4,3 +4,13 @@ description: Helm chart for shop
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
+keywords:
+  - shop
+  - multi-tenant
+  - kubernetes
+maintainers:
+  - name: ShopHub DevOps
+home: https://github.com/ShopHub-DevOps/helm-charts
+sources:
+  - https://github.com/ShopHub-DevOps/shop
+  - https://github.com/ShopHub-DevOps/shop-operator
