@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shop.fullname" . }}-frontend
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+    component: frontend
+spec:
+  replicas: {{ if eq .Values.availabilityTier "high" }}{{ .Values.replicasHigh }}{{ else }}{{ .Values.replicasStandard }}{{ end }}
+  selector:
+    matchLabels:
+      {{- include "shop.selectorLabels" . | nindent 6 }}
+      component: frontend
+  template:
+    metadata:
+      labels:
+        {{- include "shop.selectorLabels" . | nindent 8 }}
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.frontendImage }}:{{ .Values.frontendTag }}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: {{ .Values.frontendPort }}
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.env.NODE_ENV }}
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://{{ include "shop.fullname" . }}-backend:{{ .Values.backendPort }}"
+        - name: NEXT_PUBLIC_SHOP_WALLET_ADDRESS
+          value: {{ .Values.walletAddress }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5

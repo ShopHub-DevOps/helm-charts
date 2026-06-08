@@ -1,2 +1,49 @@
 # Default values for the shop chart.
 # Real configuration lands with the chart's feature epic.
+
+# Backend image
+backendImage: ghcr.io/shophub-devops/shop-backend
+backendTag: "1.0.0"
+backendPort: 8080
+
+# Frontend image
+frontendImage: ghcr.io/shophub-devops/shop-frontend
+frontendTag: "1.0.0"
+frontendPort: 3000
+
+# Availability tier: standard (2 replicas) or high (3 replicas)
+availabilityTier: standard
+replicasStandard: 2
+replicasHigh: 3
+
+# Ingress hostname (passed by operator for each shop)
+ingressHostname: "shop-{{ .Release.Name }}.local"
+
+# Database connection secret (created by operator via CNPG)
+databaseSecretName: "shop-postgres-secret"
+databaseSecretKey: "url"
+
+# Wallet address for payments
+walletAddress: "0x0000000000000000000000000000000000000000"
+
+# Labels
+labels:
+  app: shop
+  managed-by: shop-operator
+
+# Resource limits
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Environment variables
+env:
+  NODE_ENV: production
+  LOG_LEVEL: info
+
+#jwt Secret key
+jwtSecret: "change-me-in-production-with-32-char-random-string"

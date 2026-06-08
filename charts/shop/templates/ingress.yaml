@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "shop.fullname" . }}
+  labels:
+    {{- include "shop.labels" . | nindent 4 }}
+spec:
+  rules:
+    - host: {{ .Values.ingressHostname }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "shop.fullname" . }}-backend
+                port:
+                  number: {{ .Values.backendPort }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "shop.fullname" . }}-frontend
+                port:
+                  number: {{ .Values.frontendPort }}
