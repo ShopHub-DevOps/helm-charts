@@ -8,3 +8,4 @@ data:
   BACKEND_URL: "http://{{ include "shophub.fullname" . }}-backend:{{ .Values.backendPort }}"
   FRONTEND_URL: "http://{{ .Values.ingressHostname }}"
   SIWE_DOMAIN: {{ .Values.siweConfig.domain | quote }}
+  

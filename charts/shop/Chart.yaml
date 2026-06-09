@@ -9,7 +9,8 @@ keywords:
   - multi-tenant
   - kubernetes
 maintainers:
-  - name: ShopHub DevOps
+  - name: RisticDorde
+  - name: 0101dusica
 home: https://github.com/ShopHub-DevOps/helm-charts
 sources:
   - https://github.com/ShopHub-DevOps/shop

@@ -45,5 +45,5 @@ env:
   NODE_ENV: production
   LOG_LEVEL: info
 
-#jwt Secret key
+# jwt Secret key
 jwtSecret: "change-me-in-production-with-32-char-random-string"
