@@ -4,3 +4,12 @@ description: Helm chart for ShopHub (uses Shop CRDs + kube-prometheus-stack)
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
+keywords:
+  - shophub
+  - platform
+  - multi-tenant
+maintainers:
+  - name: ShopHub DevOps
+home: https://github.com/ShopHub-DevOps/shophub
+sources:
+  - https://github.com/ShopHub-DevOps/shophub
