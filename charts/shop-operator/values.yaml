@@ -1,2 +1,29 @@
 # Default values for the shop-operator chart.
 # Real configuration lands with the chart's feature epic.
+# Operator image
+image:
+  repository: ghcr.io/shophub-devops/shop-operator
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+# Operator deployment
+replicas: 1
+namespace: shop-operator-system
+
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Logging
+logLevel: info
+
+# Service for metrics
+service:
+  type: ClusterIP
+  port: 8080
+  metricsPort: 8081

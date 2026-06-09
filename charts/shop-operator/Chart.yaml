@@ -1,6 +1,15 @@
 apiVersion: v2
 name: shop-operator
-description: Helm chart for shop-operator
+description: Helm chart for deploying the shop-operator and its CRDs (Shop, DiscordChannel, Wallet)
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
+keywords:
+  - operator
+  - kubernetes
+  - multi-tenant
+maintainers:
+  - name: ShopHub DevOps
+home: https://github.com/ShopHub-DevOps/shop-operator
+sources:
+  - https://github.com/ShopHub-DevOps/shop-operator
