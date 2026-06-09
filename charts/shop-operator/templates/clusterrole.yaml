@@ -1,0 +1,44 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "shop-operator.fullname" . }}
+  labels:
+    {{- include "shop-operator.labels" . | nindent 4 }}
+rules:
+# Shops
+- apiGroups: ["shophub.io"]
+  resources: ["shops"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["shophub.io"]
+  resources: ["shops/status"]
+  verbs: ["get", "patch", "update"]
+# DiscordChannels
+- apiGroups: ["shophub.io"]
+  resources: ["discordchannels"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["shophub.io"]
+  resources: ["discordchannels/status"]
+  verbs: ["get", "patch", "update"]
+# Wallets
+- apiGroups: ["shophub.io"]
+  resources: ["wallets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["shophub.io"]
+  resources: ["wallets/status"]
+  verbs: ["get", "patch", "update"]
+# Core K8s resources
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
