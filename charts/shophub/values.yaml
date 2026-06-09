@@ -1,2 +1,44 @@
 # Default values for the shophub chart.
 # Real configuration lands with the chart's feature epic.
+
+# Backend image
+backendImage: ghcr.io/shophub-devops/shophub-backend
+backendTag: "1.0.0"
+backendPort: 8080
+
+# Frontend image
+frontendImage: ghcr.io/shophub-devops/shophub-frontend
+frontendTag: "1.0.0"
+frontendPort: 3000
+
+# Deployment
+replicas: 1
+
+# Ingress hostname
+ingressHostname: "shophub.local"
+
+# Database connection secret
+databaseSecretName: "shophub-postgres-secret"
+databaseSecretKey: "url"
+
+# JWT secret
+jwtSecret: "change-me-in-production-with-32-char-random-string"
+
+# SIWE (Sign-In With Ethereum)
+siweConfig:
+  domain: "shophub.local"
+  origin: "http://shophub.local"
+
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Environment
+env:
+  NODE_ENV: production
+  LOG_LEVEL: info
