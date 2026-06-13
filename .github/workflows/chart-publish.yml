@@ -35,14 +35,17 @@ jobs:
         id: version
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            # Tag of the form v1.2.3 -> use 1.2.3 as the chart version
             VERSION="${GITHUB_REF#refs/tags/v}"
+          elif [[ "$GITHUB_REF" == refs/pull/* ]]; then
+            # PR: 0.0.0-prN-SHA
+            PR_NUM=$(echo "$GITHUB_REF" | grep -oP 'refs/pull/\K[0-9]+')
+            SHORT_SHA="${GITHUB_SHA:0:7}"
+            VERSION="0.0.0-pr${PR_NUM}-${SHORT_SHA}"
           else
-            # Branch push: prefix with 0.0.0- so semver sorts these below
-            # any tagged release, and embed the branch name and short sha.
+            # Branch push
             BRANCH="${GITHUB_REF#refs/heads/}"
             SHORT_SHA="${GITHUB_SHA:0:7}"
-            VERSION="0.0.0-${BRANCH}.${SHORT_SHA}"
+            VERSION="0.0.0-${BRANCH}-${SHORT_SHA}"
           fi
           echo "Using chart version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
