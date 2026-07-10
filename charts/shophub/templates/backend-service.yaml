@@ -1,47 +1,17 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: {{ include "shophub.fullname" . }}-frontend
+  name: {{ include "shophub.fullname" . }}-backend
   labels:
     {{- include "shophub.labels" . | nindent 4 }}
-    component: frontend
+    component: backend
 spec:
-  replicas: {{ .Values.replicas }}
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.backendPort }}
+      targetPort: http
+      protocol: TCP
+      name: http
   selector:
-    matchLabels:
-      {{- include "shophub.selectorLabels" . | nindent 6 }}
-      component: frontend
-  template:
-    metadata:
-      labels:
-        {{- include "shophub.selectorLabels" . | nindent 8 }}
-        component: frontend
-    spec:
-      containers:
-      - name: frontend
-        image: "{{ .Values.frontendImage }}:{{ .Values.frontendTag }}"
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: {{ .Values.frontendPort }}
-          protocol: TCP
-        env:
-        - name: NODE_ENV
-          value: {{ .Values.env.NODE_ENV }}
-        - name: NEXT_PUBLIC_API_URL
-          value: "http://{{ include "shophub.fullname" . }}-backend:{{ .Values.backendPort }}"
-        resources:
-          {{- toYaml .Values.resources | nindent 10 }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          
+    {{- include "shophub.selectorLabels" . | nindent 4 }}
+    component: backend

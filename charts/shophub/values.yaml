@@ -4,7 +4,7 @@
 # Backend image
 backendImage: ghcr.io/shophub-devops/shophub-backend
 backendTag: "1.0.0"
-backendPort: 8080
+backendPort: 3000
 
 # Frontend image
 frontendImage: ghcr.io/shophub-devops/shophub-frontend
