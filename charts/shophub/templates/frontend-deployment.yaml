@@ -29,7 +29,7 @@ spec:
         - name: NODE_ENV
           value: {{ .Values.env.NODE_ENV }}
         - name: NEXT_PUBLIC_API_URL
-          value: "http://{{ include "shophub.fullname" . }}-backend:{{ .Values.backendPort }}"
+          value: "http://{{ .Values.ingressHostname }}/api"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         livenessProbe:

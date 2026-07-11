@@ -17,6 +17,18 @@ spec:
         {{- include "shophub.selectorLabels" . | nindent 8 }}
         component: backend
     spec:
+      serviceAccountName: shophub
+      initContainers:
+      - name: migrate
+        image: "{{ .Values.backendImage }}:{{ .Values.backendTag }}"
+        imagePullPolicy: IfNotPresent
+        command: ["npx", "typeorm", "migration:run", "-d", "dist/database/data-source.js"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.databaseSecretName }}
+              key: {{ .Values.databaseSecretKey }}
       containers:
       - name: backend
         image: "{{ .Values.backendImage }}:{{ .Values.backendTag }}"

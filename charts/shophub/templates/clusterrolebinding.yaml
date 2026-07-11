@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: shophub
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: shophub
+subjects:
+  - kind: ServiceAccount
+    name: shophub
+    namespace: {{ .Release.Namespace }}
