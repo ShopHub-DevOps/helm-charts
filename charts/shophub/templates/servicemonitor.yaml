@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "shophub.fullname" . }}-backend
+  labels:
+    {{- include "shophub.labels" . | nindent 4 }}
+    release: shophub
+spec:
+  selector:
+    matchLabels:
+      {{- include "shophub.selectorLabels" . | nindent 6 }}
+      component: backend
+  endpoints:
+    - port: http
+      path: /metrics
