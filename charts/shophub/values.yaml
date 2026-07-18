@@ -92,3 +92,6 @@ kube-prometheus-stack:
         enabled: true
         label: grafana_dashboard
         labelValue: "1"
+
+alerting:
+  discordWebhookUrl: "https://discord.com/api/webhooks/dummy/dummy"
