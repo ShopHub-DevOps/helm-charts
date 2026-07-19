@@ -1,3 +1,10 @@
+# Pull secrets for private registries. The ShopHub images live in private
+# GHCR packages, so a docker-registry Secret must exist in the release
+# namespace and be listed here, e.g.:
+#   imagePullSecrets:
+#     - name: ghcr-pull
+imagePullSecrets: []
+
 # Default values for the shop-operator chart.
 # Real configuration lands with the chart's feature epic.
 # Operator image

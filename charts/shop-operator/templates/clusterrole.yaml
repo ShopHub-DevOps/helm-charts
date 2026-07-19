@@ -26,10 +26,15 @@ rules:
 - apiGroups: ["shophub.io"]
   resources: ["wallets/status"]
   verbs: ["get", "patch", "update"]
+# Leader election (leases, events) is granted by the namespaced Role in
+# leader-election-role.yaml, mirroring kubebuilder's own layout - the lease
+# lives only in the operator's namespace, so it needs no cluster-wide grant.
 # Core K8s resources
+# The operator seeds a per-Shop Secret (JWT, DB placeholder) in addition to
+# reading the shared one, so it needs write verbs here - not just read.
 - apiGroups: [""]
   resources: ["secrets"]
-  verbs: ["get", "list", "watch"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
@@ -41,4 +46,18 @@ rules:
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 - apiGroups: [""]
   resources: ["configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# Database tiers provisioned per Shop:
+#   databaseTier: standard -> CNPG Cluster
+#   databaseTier: light    -> Redis Enterprise database
+- apiGroups: ["postgresql.cnpg.io"]
+  resources: ["clusters"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["app.redislabs.com"]
+  resources: ["redisenterprisedatabases"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+# Per-Shop monitoring (ServiceMonitor + PrometheusRule) and the Discord alert
+# routing generated from a DiscordChannel CR (AlertmanagerConfig).
+- apiGroups: ["monitoring.coreos.com"]
+  resources: ["servicemonitors", "prometheusrules", "alertmanagerconfigs"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]

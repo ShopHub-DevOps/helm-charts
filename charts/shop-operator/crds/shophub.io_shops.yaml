@@ -104,6 +104,12 @@ spec:
                   frontend:
                     type: string
                 type: object
+              ownerEmail:
+                description: |-
+                  OwnerEmail is the email of the user who created this shop in ShopHub.
+                  This user will automatically receive ADMIN privileges in this shop.
+                minLength: 3
+                type: string
               walletAddress:
                 description: |-
                   WalletAddress receives crypto payments for this Shop's orders.
@@ -115,6 +121,7 @@ spec:
             - databaseTier
             - displayName
             - host
+            - ownerEmail
             - walletAddress
             type: object
           status:

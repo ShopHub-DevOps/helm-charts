@@ -1,3 +1,10 @@
+# Pull secrets for private registries. The ShopHub images live in private
+# GHCR packages, so a docker-registry Secret must exist in the release
+# namespace and be listed here, e.g.:
+#   imagePullSecrets:
+#     - name: ghcr-pull
+imagePullSecrets: []
+
 # Default values for the shophub chart.
 # Real configuration lands with the chart's feature epic.
 
@@ -55,6 +62,10 @@ githubOAuth:
 
 # Kube Prometheus Stack Dependency Overrides
 kube-prometheus-stack:
+  # Default true so a standalone `helm install shophub` still brings up its own
+  # observability stack. Set to false when the cluster already has a shared
+  # kube-prometheus-stack release (see the note on the dependency in Chart.yaml).
+  enabled: true
   grafana:
     admin:
       existingSecret: "shophub-grafana-auth"

@@ -16,6 +16,13 @@ sources:
   - https://github.com/ShopHub-DevOps/shophub
 
 dependencies:
+  # Bundled so the chart can be installed standalone with a full observability
+  # stack. Disable it (kube-prometheus-stack.enabled=false) when the cluster
+  # already runs a shared kube-prometheus-stack release - installing a second
+  # prometheus-operator would make two operators reconcile the same
+  # cluster-wide ServiceMonitor/Prometheus objects. The kube-state repository
+  # installs such a shared release, so it sets this to false.
   - name: kube-prometheus-stack
     version: "61.2.0"
     repository: https://prometheus-community.github.io/helm-charts
+    condition: kube-prometheus-stack.enabled
