@@ -9,7 +9,11 @@ spec:
   selector:
     matchLabels:
       {{- include "shop.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: backend
+      # Must match the label backend-service.yaml actually sets. It is the
+      # unprefixed `component`, not `app.kubernetes.io/component` - with the
+      # prefixed key this selector matched nothing and the backend was never
+      # scraped.
+      component: backend
   endpoints:
     - port: http
       path: /metrics

@@ -1,0 +1,45 @@
+{{/*
+Leader election permissions.
+
+The manager runs with --leader-elect, so without these the operator can never
+acquire its lease and no controller ever starts - the Shop CR just sits there
+with no status and nothing is reconciled.
+
+This mirrors config/rbac/leader_election_role.yaml in the shop-operator repo.
+It is deliberately a namespaced Role (not part of the ClusterRole): the lease
+only ever lives in the operator's own namespace, so there is no reason to grant
+lease access cluster-wide.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "shop-operator.fullname" . }}-leader-election
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shop-operator.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "shop-operator.fullname" . }}-leader-election
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shop-operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "shop-operator.fullname" . }}-leader-election
+subjects:
+- kind: ServiceAccount
+  name: {{ include "shop-operator.fullname" . }}
+  namespace: {{ .Release.Namespace }}
