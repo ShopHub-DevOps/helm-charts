@@ -56,6 +56,11 @@ jobs:
           OWNER="${{ github.repository_owner }}"
           echo "lower=${OWNER,,}" >> "$GITHUB_OUTPUT"
 
+      - name: Add Helm repos
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+
       - name: Package every chart with the resolved version
         run: |
           set -e
