@@ -47,3 +47,8 @@ env:
 
 # jwt Secret key
 jwtSecret: "change-me-in-production-with-32-char-random-string"
+
+alerting:
+  errorRateThreshold: 0.05
+  latencyThreshold: 2.0
+  frequent4xxThreshold: 10

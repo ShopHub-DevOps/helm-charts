@@ -14,3 +14,8 @@ maintainers:
 home: https://github.com/ShopHub-DevOps/shophub
 sources:
   - https://github.com/ShopHub-DevOps/shophub
+
+dependencies:
+  - name: kube-prometheus-stack
+    version: "61.2.0"
+    repository: https://prometheus-community.github.io/helm-charts
